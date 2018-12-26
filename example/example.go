@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	root, err := packer.OpenRoot("public")
+	root, err := packer.Load()
 	if err != nil {
 		log.Println(err)
 		return

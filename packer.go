@@ -10,7 +10,7 @@ import (
 	"github.com/jakobvarmose/packer/internal/zip"
 )
 
-func OpenRoot(path string) (http.FileSystem, error) {
+func Load() (http.FileSystem, error) {
 	f, err := os.Open(os.Args[0])
 	if err != nil {
 		return nil, err
@@ -22,17 +22,12 @@ func OpenRoot(path string) (http.FileSystem, error) {
 	}
 
 	size := stat.Size()
-
 	zipsize, err := zip.ZipSize(f, size)
 	if err != nil {
-		if err == zip.ErrFormat {
-			return http.Dir(path), nil
-		}
 		return nil, err
 	}
 
 	r := &readerAt{f, size - zipsize}
-
 	z, err := zip.NewReader(r, zipsize)
 	if err != nil {
 		return nil, err
